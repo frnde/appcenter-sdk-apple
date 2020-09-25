@@ -112,7 +112,7 @@ static NSString *const kMSTypedProperties = @"typedProperties";
         }
       }
       if (!foundBaseData) {
-        MSLogWarning([MSAnalytics logTag], @"baseType was set but baseData is missing.");
+        MSLogWarning([MSACAnalytics logTag], @"baseType was set but baseData is missing.");
         [self.typedProperties.properties removeObjectForKey:kMSDataBaseType];
       }
     }
@@ -127,7 +127,7 @@ static NSString *const kMSTypedProperties = @"typedProperties";
         }
       }
       if (removedBaseData) {
-        MSLogWarning([MSAnalytics logTag], @"baseData was set but baseType is missing or invalid.");
+        MSLogWarning([MSACAnalytics logTag], @"baseData was set but baseType is missing or invalid.");
       }
 
       // Base type might be set but invalid, so remove it.
@@ -139,13 +139,13 @@ static NSString *const kMSTypedProperties = @"typedProperties";
 
       // Validate baseType is not an object, meaning it should not have dot.
       if ([[typedProperty name] hasPrefix:baseTypePrefix]) {
-        MSLogWarning([MSAnalytics logTag], @"baseType must not be an object.");
+        MSLogWarning([MSACAnalytics logTag], @"baseType must not be an object.");
         continue;
       }
 
       // Validate baseData is an object, meaning it has at least 1 dot.
       if ([[typedProperty name] isEqualToString:kMSDataBaseData]) {
-        MSLogWarning([MSAnalytics logTag], @"baseData must be an object.");
+        MSLogWarning([MSACAnalytics logTag], @"baseData must be an object.");
         continue;
       }
 
@@ -214,7 +214,7 @@ static NSString *const kMSTypedProperties = @"typedProperties";
 
 - (BOOL)addTypedProperty:(MSTypedProperty *)typedProperty toPropertyTree:(NSMutableDictionary *)propertyTree withKey:(NSString *)key {
   if (!propertyTree || propertyTree[key]) {
-    MSLogWarning(MSAnalytics.logTag, @"Property key '%@' already has a value, choosing one.", key);
+    MSLogWarning(MSACAnalytics.logTag, @"Property key '%@' already has a value, choosing one.", key);
     return NO;
   }
   if ([typedProperty isKindOfClass:[MSStringTypedProperty class]]) {

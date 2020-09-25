@@ -28,7 +28,7 @@ static MSAnalyticsAuthenticationProvider *_authenticationProvider;
     _childTransmissionTargets = [NSMutableDictionary<NSString *, MSAnalyticsTransmissionTarget *> new];
     _transmissionTargetToken = token;
     _isEnabledKey =
-        [NSString stringWithFormat:@"%@/%@", [MSAnalytics sharedInstance].isEnabledKey, [MSUtility targetKeyFromTargetToken:token]];
+        [NSString stringWithFormat:@"%@/%@", [MSACAnalytics sharedInstance].isEnabledKey, [MSUtility targetKeyFromTargetToken:token]];
 
     // Disable if ancestor is disabled.
     if (![self isImmediateParent]) {
@@ -47,7 +47,7 @@ static MSAnalyticsAuthenticationProvider *_authenticationProvider;
 + (void)addAuthenticationProvider:(MSAnalyticsAuthenticationProvider *)authenticationProvider {
   @synchronized(self) {
     if (!authenticationProvider) {
-      MSLogError([MSAnalytics logTag], @"Authentication provider may not be null.");
+      MSLogError([MSACAnalytics logTag], @"Authentication provider may not be null.");
       return;
     }
 
@@ -101,7 +101,7 @@ static MSAnalyticsAuthenticationProvider *_authenticationProvider;
     // Set nil for the properties to pass nil to trackEvent.
     mergedProperties = nil;
   }
-  [MSAnalytics trackEvent:eventName withTypedProperties:mergedProperties forTransmissionTarget:self flags:flags];
+  [MSACAnalytics trackEvent:eventName withTypedProperties:mergedProperties forTransmissionTarget:self flags:flags];
 }
 
 - (MSAnalyticsTransmissionTarget *)transmissionTargetForToken:(NSString *)token {
@@ -116,7 +116,7 @@ static MSAnalyticsAuthenticationProvider *_authenticationProvider;
 }
 
 - (BOOL)isEnabled {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
 
     // Get isEnabled value from persistence. No need to cache the value in a property, user settings already have their cache mechanism.
     NSNumber *isEnabledNumber = [MS_APP_CENTER_USER_DEFAULTS objectForKey:self.isEnabledKey];
@@ -127,12 +127,12 @@ static MSAnalyticsAuthenticationProvider *_authenticationProvider;
 }
 
 - (void)setEnabled:(BOOL)isEnabled {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
     if (self.isEnabled != isEnabled) {
 
       // Don't enable if the immediate parent is disabled.
       if (isEnabled && ![self isImmediateParent]) {
-        MSLogWarning([MSAnalytics logTag], @"Can't enable; parent transmission "
+        MSLogWarning([MSACAnalytics logTag], @"Can't enable; parent transmission "
                                            @"target and/or Analytics service "
                                            @"is disabled.");
         return;
@@ -157,17 +157,17 @@ static MSAnalyticsAuthenticationProvider *_authenticationProvider;
 
 - (void)pause {
   if (self.isEnabled) {
-    [MSAnalytics pauseTransmissionTargetForToken:self.transmissionTargetToken];
+    [MSACAnalytics pauseTransmissionTargetForToken:self.transmissionTargetToken];
   } else {
-    MSLogError([MSAnalytics logTag], @"This transmission target is disabled.");
+    MSLogError([MSACAnalytics logTag], @"This transmission target is disabled.");
   }
 }
 
 - (void)resume {
   if (self.isEnabled) {
-    [MSAnalytics resumeTransmissionTargetForToken:self.transmissionTargetToken];
+    [MSACAnalytics resumeTransmissionTargetForToken:self.transmissionTargetToken];
   } else {
-    MSLogError([MSAnalytics logTag], @"This transmission target is disabled.");
+    MSLogError([MSACAnalytics logTag], @"This transmission target is disabled.");
   }
 }
 
@@ -208,7 +208,7 @@ static MSAnalyticsAuthenticationProvider *_authenticationProvider;
  * @return YES if the immediate ancestor is enabled.
  */
 - (BOOL)isImmediateParent {
-  return self.parentTarget ? self.parentTarget.isEnabled : [MSAnalytics isEnabled];
+  return self.parentTarget ? self.parentTarget.isEnabled : [MSACAnalytics isEnabled];
 }
 
 @end

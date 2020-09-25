@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MSAnalytics () <MSServiceInternal, MSChannelDelegate>
+@interface MSACAnalytics () <MSServiceInternal, MSChannelDelegate>
 
 /**
  * Track an event with typed properties.

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 extern NSString *MSAnalyticsValidationCategory;
 
-@interface MSAnalytics (Validation)
+@interface MSACAnalytics (Validation)
 
 /**
  * Validate AppCenter log.

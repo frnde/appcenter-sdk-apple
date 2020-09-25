@@ -66,7 +66,7 @@
 
     // NaN returns false for all statements, so the only way to check if value is NaN is by value != value.
     if (value == (double)INFINITY || value == -(double)INFINITY || value != value) {
-      MSLogError([MSAnalytics logTag], @"Double value for property '%@' must be finite (cannot be INFINITY or NAN).", key);
+      MSLogError([MSACAnalytics logTag], @"Double value for property '%@' must be finite (cannot be INFINITY or NAN).", key);
       return self;
     }
     MSDoubleTypedProperty *doubleProperty = [MSDoubleTypedProperty new];
@@ -143,7 +143,7 @@
 
 + (BOOL)validateKey:(NSString *)key {
   if (!key) {
-    MSLogError([MSAnalytics logTag], @"Key cannot be null. Property will not be added.");
+    MSLogError([MSACAnalytics logTag], @"Key cannot be null. Property will not be added.");
     return NO;
   }
   return YES;
@@ -151,7 +151,7 @@
 
 + (BOOL)validateValue:(NSObject *)value {
   if (!value) {
-    MSLogError([MSAnalytics logTag], @"Value cannot be null. Property will not be added.");
+    MSLogError([MSACAnalytics logTag], @"Value cannot be null. Property will not be added.");
     return NO;
   }
   return YES;

@@ -50,7 +50,7 @@ static int kMSRefreshThreshold = 10 * 60;
       [strongDelegate authenticationProvider:self acquireTokenWithCompletionHandler:self.completionHandler];
     }
   } else {
-    MSLogError([MSAnalytics logTag], @"No completionhandler to acquire token has been set.");
+    MSLogError([MSACAnalytics logTag], @"No completionhandler to acquire token has been set.");
   }
 }
 
@@ -60,13 +60,13 @@ static int kMSRefreshThreshold = 10 * 60;
   @synchronized(self) {
     if (self.completionHandler == completionHandler) {
       self.completionHandler = nil;
-      MSLogDebug([MSAnalytics logTag], @"Got result back from MSAcquireTokenCompletionBlock.");
+      MSLogDebug([MSACAnalytics logTag], @"Got result back from MSAcquireTokenCompletionBlock.");
       if (!token) {
-        MSLogError([MSAnalytics logTag], @"Token must not be null");
+        MSLogError([MSACAnalytics logTag], @"Token must not be null");
         return;
       }
       if (!expiryDate) {
-        MSLogError([MSAnalytics logTag], @"Date must not be null");
+        MSLogError([MSACAnalytics logTag], @"Date must not be null");
         return;
       }
       NSString *tokenPrefix;

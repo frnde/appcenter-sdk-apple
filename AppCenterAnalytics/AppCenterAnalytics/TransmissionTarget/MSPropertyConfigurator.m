@@ -60,39 +60,39 @@ static const char deviceIdPrefix = 'i';
 }
 
 - (void)setEventPropertyString:(NSString *)propertyValue forKey:(NSString *)propertyKey {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
     [self.eventProperties setString:propertyValue forKey:propertyKey];
   }
 }
 
 - (void)setEventPropertyDouble:(double)propertyValue forKey:(NSString *)propertyKey {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
     [self.eventProperties setDouble:propertyValue forKey:propertyKey];
   }
 }
 
 - (void)setEventPropertyInt64:(int64_t)propertyValue forKey:(NSString *)propertyKey {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
     [self.eventProperties setInt64:propertyValue forKey:propertyKey];
   }
 }
 
 - (void)setEventPropertyBool:(BOOL)propertyValue forKey:(NSString *)propertyKey {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
     [self.eventProperties setBool:propertyValue forKey:propertyKey];
   }
 }
 
 - (void)setEventPropertyDate:(NSDate *)propertyValue forKey:(NSString *)propertyKey {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
     [self.eventProperties setDate:propertyValue forKey:propertyKey];
   }
 }
 
 - (void)removeEventPropertyForKey:(NSString *)propertyKey {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
     if (!propertyKey) {
-      MSLogError([MSAnalytics logTag], @"Event property key to remove cannot be nil.");
+      MSLogError([MSACAnalytics logTag], @"Event property key to remove cannot be nil.");
       return;
     }
     [self.eventProperties.properties removeObjectForKey:propertyKey];
@@ -182,7 +182,7 @@ static const char deviceIdPrefix = 'i';
 }
 
 - (void)mergeTypedPropertiesWith:(MSEventProperties *)mergedEventProperties {
-  @synchronized([MSAnalytics sharedInstance]) {
+  @synchronized([MSACAnalytics sharedInstance]) {
     for (NSString *key in self.eventProperties.properties) {
       if (!mergedEventProperties.properties[key]) {
         mergedEventProperties.properties[key] = self.eventProperties.properties[key];

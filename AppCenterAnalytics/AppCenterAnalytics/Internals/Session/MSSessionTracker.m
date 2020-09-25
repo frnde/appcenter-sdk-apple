@@ -46,7 +46,7 @@ static NSString *const kMSPastSessionsKey = @"PastSessions";
       if ([self.context sessionId] == nil || [self hasSessionTimedOut]) {
         NSString *sessionId = MS_UUID_STRING;
         [self.context setSessionId:sessionId];
-        MSLogInfo([MSAnalytics logTag], @"New session ID: %@", sessionId);
+        MSLogInfo([MSACAnalytics logTag], @"New session ID: %@", sessionId);
 
         // Create a start session log.
         MSStartSessionLog *log = [[MSStartSessionLog alloc] init];

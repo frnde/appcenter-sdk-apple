@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * App Center analytics service.
  */
-@interface MSAnalytics : MSServiceAbstract
+@interface MSACAnalytics : MSServiceAbstract
 
 /**
  * Track an event.

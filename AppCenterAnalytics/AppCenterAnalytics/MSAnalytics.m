@@ -27,10 +27,10 @@ static NSString *const kMSServiceName = @"Analytics";
 static NSString *const kMSGroupId = @"Analytics";
 
 // Singleton
-static MSAnalytics *sharedInstance = nil;
+static MSACAnalytics *sharedInstance = nil;
 static dispatch_once_t onceToken;
 
-@implementation MSAnalytics
+@implementation MSACAnalytics
 
 /**
  * @discussion
@@ -48,7 +48,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
 - (instancetype)init {
 
   [MS_APP_CENTER_USER_DEFAULTS migrateKeys:@{
-    @"MSAppCenterAnalyticsIsEnabled" : MSPrefixKeyFrom(@"kMSAnalyticsIsEnabledKey"), // [MSAnalytics isEnabled]
+    @"MSAppCenterAnalyticsIsEnabled" : MSPrefixKeyFrom(@"kMSAnalyticsIsEnabledKey"), // [MSACAnalytics isEnabled]
     @"MSAppCenterPastSessions" : @"pastSessionsKey"                                  // [MSSessionTracker init]
   }
                                 forService:kMSServiceName];
@@ -72,7 +72,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
 + (instancetype)sharedInstance {
   dispatch_once(&onceToken, ^{
     if (sharedInstance == nil) {
-      sharedInstance = [[MSAnalytics alloc] init];
+      sharedInstance = [[MSACAnalytics alloc] init];
     }
   });
   return sharedInstance;
@@ -109,7 +109,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
   // TODO: Uncomment when auto page tracking will be supported.
   // Set up swizzling for auto page tracking.
   // [MSAnalyticsCategory activateCategory];
-  MSLogVerbose([MSAnalytics logTag], @"Started Analytics service.");
+  MSLogVerbose([MSACAnalytics logTag], @"Started Analytics service.");
 }
 
 + (NSString *)logTag {
@@ -158,7 +158,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
       }
     }
 
-    MSLogInfo([MSAnalytics logTag], @"Analytics service has been enabled.");
+    MSLogInfo([MSACAnalytics logTag], @"Analytics service has been enabled.");
   } else {
     if (self.startedFromApplication) {
       [self.channelGroup removeDelegate:self.sessionTracker];
@@ -166,7 +166,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
       [self.sessionTracker stop];
       [[MSSessionContext sharedInstance] clearSessionHistoryAndKeepCurrentSession:NO];
     }
-    MSLogInfo([MSAnalytics logTag], @"Analytics service has been disabled.");
+    MSLogInfo([MSACAnalytics logTag], @"Analytics service has been disabled.");
   }
 }
 
@@ -214,14 +214,14 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
            withProperties:(nullable NSDictionary<NSString *, NSString *> *)properties
     forTransmissionTarget:(nullable MSAnalyticsTransmissionTarget *)transmissionTarget
                     flags:(MSFlags)flags {
-  [[MSAnalytics sharedInstance] trackEvent:eventName withProperties:properties forTransmissionTarget:transmissionTarget flags:flags];
+  [[MSACAnalytics sharedInstance] trackEvent:eventName withProperties:properties forTransmissionTarget:transmissionTarget flags:flags];
 }
 
 + (void)trackEvent:(NSString *)eventName
       withTypedProperties:(nullable MSEventProperties *)properties
     forTransmissionTarget:(nullable MSAnalyticsTransmissionTarget *)transmissionTarget
                     flags:(MSFlags)flags {
-  [[MSAnalytics sharedInstance] trackEvent:eventName withTypedProperties:properties forTransmissionTarget:transmissionTarget flags:flags];
+  [[MSACAnalytics sharedInstance] trackEvent:eventName withTypedProperties:properties forTransmissionTarget:transmissionTarget flags:flags];
 }
 
 + (void)trackPage:(NSString *)pageName {
@@ -229,41 +229,41 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
 }
 
 + (void)trackPage:(NSString *)pageName withProperties:(nullable NSDictionary<NSString *, NSString *> *)properties {
-  [[MSAnalytics sharedInstance] trackPage:pageName withProperties:properties];
+  [[MSACAnalytics sharedInstance] trackPage:pageName withProperties:properties];
 }
 
 + (void)pause {
-  [[MSAnalytics sharedInstance] pause];
+  [[MSACAnalytics sharedInstance] pause];
 }
 
 + (void)resume {
-  [[MSAnalytics sharedInstance] resume];
+  [[MSACAnalytics sharedInstance] resume];
 }
 
 + (void)setAutoPageTrackingEnabled:(BOOL)isEnabled {
-  [MSAnalytics sharedInstance].autoPageTrackingEnabled = isEnabled;
+  [MSACAnalytics sharedInstance].autoPageTrackingEnabled = isEnabled;
 }
 
 + (BOOL)isAutoPageTrackingEnabled {
-  return [MSAnalytics sharedInstance].autoPageTrackingEnabled;
+  return [MSACAnalytics sharedInstance].autoPageTrackingEnabled;
 }
 
 + (void)setTransmissionInterval:(NSUInteger)interval {
-  [[MSAnalytics sharedInstance] setTransmissionInterval:interval];
+  [[MSACAnalytics sharedInstance] setTransmissionInterval:interval];
 }
 
 #pragma mark - Transmission Target
 
 + (MSAnalyticsTransmissionTarget *)transmissionTargetForToken:(NSString *)token {
-  return [[MSAnalytics sharedInstance] transmissionTargetForToken:token];
+  return [[MSACAnalytics sharedInstance] transmissionTargetForToken:token];
 }
 
 + (void)pauseTransmissionTargetForToken:(NSString *)token {
-  [[MSAnalytics sharedInstance] pauseTransmissionTargetForToken:token];
+  [[MSACAnalytics sharedInstance] pauseTransmissionTargetForToken:token];
 }
 
 + (void)resumeTransmissionTargetForToken:(NSString *)token {
-  [[MSAnalytics sharedInstance] resumeTransmissionTargetForToken:token];
+  [[MSACAnalytics sharedInstance] resumeTransmissionTargetForToken:token];
 }
 
 #pragma mark - Private methods
@@ -294,7 +294,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
     // Validate flags.
     MSFlags persistenceFlag = flags & kMSPersistenceFlagsMask;
     if (persistenceFlag != MSFlagsNormal && persistenceFlag != MSFlagsCritical) {
-      MSLogWarning([MSAnalytics logTag], @"Invalid flags (%u) received, using normal as a default.", (unsigned int)persistenceFlag);
+      MSLogWarning([MSACAnalytics logTag], @"Invalid flags (%u) received, using normal as a default.", (unsigned int)persistenceFlag);
       persistenceFlag = MSFlagsNormal;
     }
 
@@ -310,7 +310,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
           log.userId = [[MSUserIdContext sharedInstance] userId];
         }
       } else {
-        MSLogError([MSAnalytics logTag], @"This transmission target is disabled.");
+        MSLogError([MSACAnalytics logTag], @"This transmission target is disabled.");
         return;
       }
     } else {
@@ -349,7 +349,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
   NSMutableDictionary<NSString *, id> *validProperties = [NSMutableDictionary new];
   for (NSString *key in properties) {
     if (![key isKindOfClass:[NSString class]]) {
-      MSLogWarning([MSAnalytics logTag], @"Event property contains an invalid key, dropping the property.");
+      MSLogWarning([MSACAnalytics logTag], @"Event property contains an invalid key, dropping the property.");
       continue;
     }
 
@@ -362,7 +362,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
         [validProperties setValue:value forKey:key];
       }
     } else {
-      MSLogWarning([MSAnalytics logTag], @"Event property contains an invalid value for key %@, dropping the property.", key);
+      MSLogWarning([MSACAnalytics logTag], @"Event property contains an invalid value for key %@, dropping the property.", key);
     }
   }
 
@@ -399,23 +399,23 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
 
 - (void)setTransmissionInterval:(NSUInteger)interval {
   if (self.started) {
-    MSLogError([MSAnalytics logTag], @"The transmission interval should be set before the MSAnalytics service is started.");
+    MSLogError([MSACAnalytics logTag], @"The transmission interval should be set before the MSACAnalytics service is started.");
     return;
   }
   if (interval > kMSFlushIntervalMaximum || interval < kMSFlushIntervalMinimum) {
     MSLogError(
-        [MSAnalytics logTag], @"The transmission interval is not valid, it should be between %u second(s) and %u second(s) (%u day).",
+        [MSACAnalytics logTag], @"The transmission interval is not valid, it should be between %u second(s) and %u second(s) (%u day).",
         (unsigned int)kMSFlushIntervalMinimum, (unsigned int)kMSFlushIntervalMaximum, (unsigned int)(kMSFlushIntervalMaximum / 86400));
     return;
   }
   self.flushInterval = interval;
-  MSLogDebug([MSAnalytics logTag], @"Transmission interval set to %u second(s)", (unsigned int)interval);
+  MSLogDebug([MSACAnalytics logTag], @"Transmission interval set to %u second(s)", (unsigned int)interval);
 }
 
 - (MSAnalyticsTransmissionTarget *)transmissionTargetForToken:(NSString *)transmissionTargetToken {
   MSAnalyticsTransmissionTarget *transmissionTarget = self.transmissionTargets[transmissionTargetToken];
   if (transmissionTarget) {
-    MSLogDebug([MSAnalytics logTag], @"Returning transmission target found with id %@.",
+    MSLogDebug([MSACAnalytics logTag], @"Returning transmission target found with id %@.",
                [MSUtility targetKeyFromTargetToken:transmissionTargetToken]);
     return transmissionTarget;
   }
@@ -432,7 +432,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
   MSAnalyticsTransmissionTarget *target = [[MSAnalyticsTransmissionTarget alloc] initWithTransmissionTargetToken:transmissionTargetToken
                                                                                                     parentTarget:nil
                                                                                                     channelGroup:self.channelGroup];
-  MSLogDebug([MSAnalytics logTag], @"Created transmission target with target key %@.",
+  MSLogDebug([MSACAnalytics logTag], @"Created transmission target with target key %@.",
              [MSUtility targetKeyFromTargetToken:transmissionTargetToken]);
   return target;
 }
@@ -482,7 +482,7 @@ __attribute__((used)) static void importCategories() { [NSString stringWithForma
 }
 
 + (void)setDelegate:(nullable id<MSAnalyticsDelegate>)delegate {
-  [[MSAnalytics sharedInstance] setDelegate:delegate];
+  [[MSACAnalytics sharedInstance] setDelegate:delegate];
 }
 
 #pragma mark - MSChannelDelegate

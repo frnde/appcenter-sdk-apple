@@ -22,7 +22,7 @@ static const int kMSMaxEventNameLength = 256;
  */
 NSString *MSAnalyticsValidationCategory;
 
-@implementation MSAnalytics (Validation)
+@implementation MSACAnalytics (Validation)
 
 - (BOOL)channelUnit:(id<MSChannelUnitProtocol>)__unused channelUnit shouldFilterLog:(id<MSLog>)log {
   NSObject *logObject = (NSObject *)log;
@@ -50,11 +50,11 @@ NSString *MSAnalyticsValidationCategory;
 
 - (nullable NSString *)validateEventName:(NSString *)eventName forLogType:(NSString *)logType {
   if (!eventName || [eventName length] < kMSMinEventNameLength) {
-    MSLogError([MSAnalytics logTag], @"%@ name cannot be null or empty", logType);
+    MSLogError([MSACAnalytics logTag], @"%@ name cannot be null or empty", logType);
     return nil;
   }
   if ([eventName length] > kMSMaxEventNameLength) {
-    MSLogWarning([MSAnalytics logTag], @"%@ '%@' : name length cannot be longer than %d characters. "
+    MSLogWarning([MSACAnalytics logTag], @"%@ '%@' : name length cannot be longer than %d characters. "
                                        @"Name will be truncated.",
                  logType, eventName, kMSMaxEventNameLength);
     eventName = [eventName substringToIndex:kMSMaxEventNameLength];
@@ -74,7 +74,7 @@ NSString *MSAnalyticsValidationCategory;
   MSEventProperties *validCopy = [MSEventProperties new];
   for (NSString *propertyKey in eventProperties.properties) {
     if ([validCopy.properties count] == kMSMaxPropertiesPerLog) {
-      MSLogWarning([MSAnalytics logTag], @"Typed properties cannot contain more than %d items. Skipping other properties.", kMSMaxPropertiesPerLog);
+      MSLogWarning([MSACAnalytics logTag], @"Typed properties cannot contain more than %d items. Skipping other properties.", kMSMaxPropertiesPerLog);
       break;
     }
     MSTypedProperty *property = eventProperties.properties[propertyKey];
@@ -112,7 +112,7 @@ NSString *MSAnalyticsValidationCategory;
 
 - (NSString *)validateAppCenterPropertyName:(NSString *)propertyKey {
   if ([propertyKey length] > kMSMaxPropertyKeyLength) {
-    MSLogWarning([MSAnalytics logTag], @"Typed property '%@': key length cannot exceed %d characters. Property value will be truncated.", propertyKey,
+    MSLogWarning([MSACAnalytics logTag], @"Typed property '%@': key length cannot exceed %d characters. Property value will be truncated.", propertyKey,
                  kMSMaxPropertyKeyLength);
     return [propertyKey substringToIndex:(kMSMaxPropertyKeyLength - 1)];
   }
@@ -121,7 +121,7 @@ NSString *MSAnalyticsValidationCategory;
 
 - (NSString *)validateAppCenterStringTypedPropertyValue:(NSString *)value {
   if ([value length] > kMSMaxPropertyValueLength) {
-    MSLogWarning([MSAnalytics logTag], @"Typed property value length cannot exceed %d characters. Property value will be truncated.",
+    MSLogWarning([MSACAnalytics logTag], @"Typed property value length cannot exceed %d characters. Property value will be truncated.",
                  kMSMaxPropertyValueLength);
     return [value substringToIndex:(kMSMaxPropertyValueLength - 1)];
   }

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 // The Id suffix for critical events.
 static NSString *const kMSCriticalChannelSuffix = @"critical";
 
-@interface MSAnalytics () <MSSessionTrackerDelegate>
+@interface MSACAnalytics () <MSSessionTrackerDelegate>
 
 /**
  * Session tracking component.

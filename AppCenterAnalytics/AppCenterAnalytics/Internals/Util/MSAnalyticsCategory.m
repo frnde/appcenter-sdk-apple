@@ -66,7 +66,7 @@ static BOOL ms_shouldTrackPageView(MSViewController *viewController) {
   // Forward to the original implementation.
   ((void (*)(id, SEL, BOOL))viewWillAppearOriginalImp)(self, _cmd, animated);
 
-  if ([MSAnalytics isAutoPageTrackingEnabled]) {
+  if ([MSACAnalytics isAutoPageTrackingEnabled]) {
 
     if (!ms_shouldTrackPageView(self)) {
       return;
@@ -84,13 +84,13 @@ static BOOL ms_shouldTrackPageView(MSViewController *viewController) {
     }
 
     // Track page if ready.
-    if ([MSAnalytics sharedInstance].available) {
+    if ([MSACAnalytics sharedInstance].available) {
 
       // Reset cached page.
       MSMissedPageViewName = nil;
 
       // Track page.
-      [MSAnalytics trackPage:pageViewName];
+      [MSACAnalytics trackPage:pageViewName];
     } else {
 
       // Store the page name for retroactive tracking.

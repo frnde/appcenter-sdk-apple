@@ -69,7 +69,7 @@ let package = Package(
             name: "AppCenterCrashes",
             dependencies: ["AppCenter", .product(name: "CrashReporter", package: "PLCrashReporter")],
             path: "AppCenterCrashes/AppCenterCrashes",
-            exclude: ["Support"],
+            exclude: ["Support", "Internals/MSCrashesBufferedLog.hpp"],
             cSettings: [
                 .headerSearchPath("**"),
                 .headerSearchPath("../../AppCenter/AppCenter/**"),

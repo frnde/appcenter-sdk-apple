@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/plcrashreporter.git",
         "state": {
           "branch": null,
-          "revision": "6b7ca9a2faad6ea990ff60b0a3ee4fdf3db59150",
-          "version": "1.7.2"
+          "revision": "de6b8f9db4b2a0aa859a5507550a70548e4da936",
+          "version": "1.8.1"
         }
       }
     ]
